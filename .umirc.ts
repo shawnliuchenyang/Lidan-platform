@@ -61,10 +61,6 @@ const config: IConfig =  {
     "@red":"#ff3e27",
     "@green":"#00845f"
   },
-  chainWebpack(config, { webpack }) {
-    // 设置 alias
-    config.resolve.alias.set('nova', '@didi/nova-core');
-  }
 }
 
 export default config;

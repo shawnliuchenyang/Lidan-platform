@@ -7,7 +7,6 @@
     "lint": "eslint {src,mock,tests}/**/*.{ts,tsx} --fix",
     "precommit": "lint-staged",
     "pm2": "pm2 start --no-daemon pm2.json",
-    "i": "npm i --no-optional --registry=http://npm.intra.xiaojukeji.com"
   },
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
