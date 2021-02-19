@@ -18,14 +18,14 @@ const config: IConfig =  {
           redirect: './login'
         },
 
-        { path: '/center', component: '../pages/Center' },
-        { path: '/schedule', component: '../pages/Schedule' },
-        { path: '/staff', component: '../pages/Staff' },
-        { path: '/auth', component: '../pages/Auth' },
-        { path: '/eassy', component: '../pages/Eassy' },
-        { path: '/activity', component: '../pages/Activity' },
-        { path: '/staff/detail', component: '../pages/StaffDetail' },
-        { path: '/activity/detail', component: '../pages/ActivityDetail' },
+        { path: '/center', component: '../pages/Center', title: '会议中心', favicon: 'https://cdn.wul.ai/file-analyze/logo.png' },
+        { path: '/schedule', component: '../pages/Schedule', title: '日程安排' },
+        { path: '/staff', component: '../pages/Staff', title: '人员管理' },
+        { path: '/auth', component: '../pages/Auth', title: '权限管理' },
+        { path: '/eassy', component: '../pages/Eassy', title: '征文管理' },
+        { path: '/activity', component: '../pages/Activity', title: '活动管理' },
+        { path: '/staff/detail', component: '../pages/StaffDetail', title: '人员详情' },
+        { path: '/activity/detail', component: '../pages/ActivityDetail', title: '活动详情' },
       ]
     }
   ],
@@ -35,8 +35,11 @@ const config: IConfig =  {
       antd: true,
       dva: true,
       dynamicImport: false,
-      title: 'saving-card',
       dll: false,
+      title: true,
+      links: [
+        { rel: 'icon', href: 'https://cdn.wul.ai/file-analyze/logo.png' },
+      ],
       
       routes: {
         exclude: [

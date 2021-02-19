@@ -4,6 +4,7 @@ import { Button, InputNumber, Input, Radio, Select, message, Spin, DatePicker, T
 import router from 'umi/router';
 import { queryCard, createSku, updateSkuDetail } from '@/service/cargoDetail'
 import { encodeData, SKUConfig }  from './utils'
+import  WangEditor  from '@/components/WangEditor'
 import Utils from '@/utils/common';
 import moment from 'moment';
 
@@ -22,6 +23,9 @@ const Cargo: FC<IProps> = (props) => {
   const [loading, setloading] = useState(false);
   const [mode, setmode] = useState("");
   const [type, settype] = useState(1);
+  const [meetInfo, setMeetInfo] = useState({});
+
+  const refInput = React.useRef(null);
 
   useEffect(() => {
       // const { query } = props.location
@@ -132,7 +136,15 @@ const Cargo: FC<IProps> = (props) => {
       }
     }
   }
-  
+
+  const changeEditor = (e:any, type:string) => {
+    if(type == "meet1"){
+      setMeetInfo(e)
+    }
+  }
+
+
+  console.log('meetinfo', meetInfo)
     return (
       <div className={styles.container}>
         <div className={styles.header}>
@@ -140,7 +152,7 @@ const Cargo: FC<IProps> = (props) => {
         </div>
         <div className={styles.body}>
         {
-            false && <div onClick={() => console.log(encodeData(form.getFieldsValue(), mode))}>获取值</div>
+            true && <div onClick={() => console.log(encodeData(form.getFieldsValue(), mode))}>获取值</div>
         }
         <Form 
         form={form} 
@@ -184,7 +196,6 @@ const Cargo: FC<IProps> = (props) => {
             />
         </Form.Item>
 
-
         {/* {hasSKUitems(type, "third_sku_id")?
           <Form.Item label="中台卡批次ID" name="third_sku_id" rules={[{ required: true}]}>
             <Input 
@@ -196,6 +207,13 @@ const Cargo: FC<IProps> = (props) => {
         : null} */}
 
         </Form>
+
+        <div>
+        <WangEditor 
+          changeEditor={changeEditor}
+          type="meet1"
+            />
+        </div>
           <div className={styles.btnGroup}>
              <Button onClick={back} className={styles.cancel}>返回</Button>
              <Button onClick={submit} className={styles.submit} type="primary">保存</Button>

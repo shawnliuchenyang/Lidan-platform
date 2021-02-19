@@ -32,5 +32,5 @@ function getMainStaticFileName() {
 
 exports.getHtmlByConfig = function(configString) {
   const { mainCssFileName, mainJsFileName } = getMainStaticFileName();
-  return `<!DOCTYPE html><html><head><link rel="icon" href="https://cdn.wul.ai/file-analyze/logo.png"><link rel="stylesheet" href="/${mainCssFileName}"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"><title>UiBot AI能力平台</title><script>window.routerBase = "/";window.config=${configString};</script></head><body><div id="root"></div><script src="/${mainJsFileName}"></script></body></html>`;
+  return `<!DOCTYPE html><html><head><link rel="icon" href="https://cdn.wul.ai/file-analyze/logo.png" type="image/x-icon"/><link rel="stylesheet" href="/${mainCssFileName}"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"><title>UiBot AI能力平台</title><script>window.routerBase = "/";window.config=${configString};</script></head><body><div id="root"></div><script src="/${mainJsFileName}"></script></body></html>`;
 };
