@@ -2,7 +2,8 @@ import React, { FC, useEffect, useState } from 'react';
 import styles from './styles.less'
 import { Button, Table, Input, Select, Modal, message, Radio, Spin, DatePicker, Form, Col, Row} from 'antd'
 import router from 'umi/router';
-import { getSkuList, skuApply, skuApprove, skuStop } from '@/service/cargo'
+import { getActivityList } from '@/service/cargo'
+import { createBaseinfo } from '@/service/cargoDetail'
 import { PRIORITY_INFO, SKU_STATUS_INFO } from '@/constants/basic'
 import { getSkuStatus, cargoStatus, realStatus, skuType } from '@/utils/common'
 import Utils from '@/utils/common';
@@ -20,92 +21,40 @@ const Cargo: FC = () => {
   const [loading, setloading] = useState(false);
   const [page, setpage] = useState(1);
   const [total, settotal] = useState(0);
-  const [operateId, setoperateId] = useState(0);
+  const [operateItem, setoperateItem] = useState({});
   const [showOfflineModal, setshowOfflineModal] = useState(false);
   const [showOnlineModal, setshowOnlineModal] = useState(false);
+  const [showDeleteModal, setshowDeleteModal] = useState(false);
   const [showCheckModal, setshowCheckModal] = useState(false);
   const [auditor, setauditor] = useState(username);
   const [auditStatus, setauditStatus] = useState('');
 
   useEffect(() => {
-    getActivityList()
+    getList()
   }, []);
 
   useEffect(() => {
-    getActivityList()
+    getList()
   }, [page]);
 
-  const getActivityList = async(init?:boolean) => {
+  const getList = async(init?:boolean) => {
     const params = form.getFieldsValue()
-    const statusParams = realStatus[params.status]
-    const enable_time = params.dateRange?params.dateRange[0].format('YYYY-MM-DD'):''
-    const expire_time = params.dateRange?params.dateRange[1].format('YYYY-MM-DD'):''
     delete params.dateRange
     setloading(true)
     try{
-      let staff_list = [
-      {
-        id: 0,
-        name: "会议一",
-        scene: "线下会议",
-        city: "北京",
-        place: "北京会议红心-北京市朝阳区来广营西路88号",
-        dateRange: "2021-02-02 00:00:00~2021-03-02 23:59:59",
-        status:-1,
-        budget: 100000.00,
-        creator: "liuchenyang"
-      },
-      {
-        id: 1,
-        name: "会议二",
-        scene: "线下会议",
-        city: "成都",
-        place: "武侯会议中心-四川省成都市武侯区置信北路3号",
-        dateRange: "2021-01-28 00:00:00~2021-02-23 23:59:59",
-        status: 1,
-        budget: 200000.00,
-        creator: "liuchenyang"
-      },
-      {
-        id: 2,
-        name: "会议三",
-        scene: "线上会议",
-        city: "",
-        place: "Zoom-25847652",
-        dateRange: "2021-05-28 00:00:00~2021-06-23 23:59:59",
-        status: 2,
-        budget: 25000.00,
-        creator: "liuchenyang"
-      },
-    ]
-    console.log('params.status', params.status)
-      if(params.status == -1){
-        staff_list = [staff_list[0]]
+      const res = await getActivityList({
+        pageSize: 9999,
+        pageIndex: 1
+      })
+      if(res.data){
+        console.log(res.data)
+        const noDelList = res.data.list.filter(item => !item.isDel)
+        setStaffList(noDelList)
+        settotal(res.data.total)
+        if(init){
+          setpage(1)
+        }
       }
-
-      if(params.status == 1){
-        staff_list = [staff_list[1]]
-      }
-
-      if(params.status == 2){
-        staff_list = [staff_list[2]]
-      }
-      setStaffList(staff_list)
-      // const res = await getSkuList({
-      //   ...params,
-      //   ...statusParams,
-      //   enable_time,
-      //   expire_time,
-      //   page: init?1:page,
-      //   limit: 20,
-      // })
-      // if(res.data){
-      //   setStaffList(res.data.data)
-      //   settotal(res.data.pagination.total_records)
-      //   if(init){
-      //     setpage(1)
-      //   }
-      // }
       
     }catch(err){
       message.error(err)
@@ -131,7 +80,7 @@ const Cargo: FC = () => {
   const checkSKU = async() => {
     try {
       const params = {
-        id: operateId,
+        id: operateItem,
         auditor,
         audit_status: auditStatus,
       }
@@ -146,85 +95,114 @@ const Cargo: FC = () => {
     }
   }
 
-  const onlineSKU = async() => {
-    const list = staffList
-    list[operateId].status = 1
-    setStaffList(list)
+  const onlineMeeting = async() => {
+    toggleOnlineModal(-1)
+
+    try {
+      const res = await createBaseinfo({
+        ...operateItem,
+        meetingStatus: 1
+      })
+      if(res.returncode === 0){
+        message.success("会议上线成功")
         toggleOnlineModal(-1)
-    // try {
-    //   const res = await skuApply({id: operateId})
-    //   if(res.errno === 0){
-    //     message.success("申请上架成功")
-    //     toggleOnlineModal(-1)
-    //     getActivityList()
-    //   }
-    // }catch(err){
-    //   message.error(err)
-    // }
+        getList()
+      }
+    }catch(err){
+      message.error(err)
+    }
   }
 
-  const offlineSKU = async() => {
-    const list = staffList
-    list[operateId].status = -1
-    setStaffList(list)
+  const offlineMeeting = async() => {
     toggleOfflineModal(-1)
-    // try {
-    //   const res = await skuStop({id: operateId})
-    //   if(res.errno === 0){
-    //     message.success("商品下架成功")
-    //     toggleOfflineModal(-1)
-    //     getActivityList()
-    //   }
-    // }catch(err){
-    //   message.error(err)
-    // }
+    try {
+      const res = await createBaseinfo({
+        ...operateItem,
+        meetingStatus: 0
+      })
+      if(res.returncode === 0){
+        message.success("会议下线成功")
+        toggleOfflineModal(-1)
+        getList()
+      }
+    }catch(err){
+      message.error(err)
+    }
   }
 
-  // const toggleCheckModal = (operateId: number) => {
+  const deleteMeeting = async() => {
+    toggleDeleteModal(-1)
+    try {
+      const res = await createBaseinfo({
+        ...operateItem,
+        isDel: 1
+      })
+      if(res.returncode === 0){
+        message.success("删除会议成功")
+        toggleDeleteModal(-1)
+        getList()
+      }
+    }catch(err){
+      message.error(err)
+    }
+  }
+
+  // const toggleCheckModal = (operateItem: number) => {
   //   setshowCheckModal(!showCheckModal)
-  //   setoperateId(operateId)
+  //   setoperateItem(operateItem)
   // }
 
-  const toggleOnlineModal = (operateId: number) => {
+  const toggleOnlineModal = (operateItem: number) => {
     setshowOnlineModal(!showOnlineModal)
-    setoperateId(operateId)
+    setoperateItem(operateItem)
   }
 
-  const toggleOfflineModal = (operateId: number) => {
+  const toggleOfflineModal = (operateItem: number) => {
     setshowOfflineModal(!showOfflineModal)
-    setoperateId(operateId)
+    setoperateItem(operateItem)
+  }
+
+  const toggleDeleteModal = (operateItem: number) => {
+    setshowDeleteModal(!showDeleteModal)
+    setoperateItem(operateItem)
   }
 
 
 
-   const renderOperation = (audit_status:number, status:number, item:any) => {
-    if(status === 1){
+   const renderOperation = (status:number, item:any) => {
+    if(status === 0){
         return(
           <div>
             <a  onClick={() => goDetail(item, "check")}>
               查看
             </a>
-            <a  onClick={() => goDetail(item, "check")}>
+            <a  onClick={() => goDetail(item, "edit")}>
               编辑
             </a>
-            <a onClick={() => toggleOfflineModal(item.id)}>
-              活动下线
+            <a  onClick={() => toggleDeleteModal(item)}>
+              删除
+            </a>
+            <a onClick={() => toggleOnlineModal(item)}>
+              活动上线
             </a>
           </div>
         )
     }
 
-    if(status === -1 || status === -2){
+    if(status === 1){
       return(
         <div>
           <a  onClick={() => goDetail(item, "check")}>
             查看
           </a>
-          <a  onClick={() => goDetail(item, "check")}>
+          <a  onClick={() => goDetail(item, "edit")}>
             编辑
           </a>
-          <a onClick={() => toggleOnlineModal(item.id)}>
-            活动审核
+          <a  onClick={() => toggleDeleteModal(item)}>
+            删除
+          </a>
+          <a onClick={() => toggleOfflineModal(item)}>
+            活动下线
           </a>
         </div>
       )
@@ -240,44 +218,34 @@ const Cargo: FC = () => {
         key: 'id',
       },
       {
-        title: '活动名称',
-        dataIndex: 'name',
-        key: 'name',
+        title: '会议名称',
+        dataIndex: 'meetingName',
+        key: 'meetingName',
       },
       {
-        title: '活动形式',
-        dataIndex: 'scene',
-        key: 'scene',
+        title: '会议主办方',
+        dataIndex: 'sponsor',
+        key: 'sponsor',
       },
       {
-        title: '活动城市',
-        dataIndex: 'city',
-        key: 'city',
+        title: '会议地址',
+        dataIndex: 'address',
+        key: 'address',
       },
       {
-        title: '活动地点',
-        dataIndex: 'place',
-        key: 'place',
+        title: '会议开始时间',
+        dataIndex: 'beginTime',
+        key: 'beginTime',
       },
       {
-        title: '活动预算',
-        dataIndex: 'budget',
-        key: 'budget',
-        render: (price:number, item:any) => (
-          <div>
-            {price+"元"}
-          </div>
-      )
+        title: '会议结束时间',
+        dataIndex: 'endTime',
+        key: 'endTime',
       },
       {
-        title: '活动有效期',
-        dataIndex: 'dateRange',
-        key: 'dateRange',
-      },
-      {
-        title: '活动状态',
-        dataIndex: 'status',
-        key: 'status',
+        title: '会议状态',
+        dataIndex: 'meetingStatus',
+        key: 'meetingStatus',
         render: (status:number, item:any) => (
           <div>
             {getSkuStatus(status)}
@@ -285,9 +253,9 @@ const Cargo: FC = () => {
       )
       },
       {
-        title: '创建人',
-        dataIndex: 'creator',
-        key: 'status',
+        title: '管理员',
+        dataIndex: 'adminUser',
+        key: 'adminUser',
       },
       {
         title: '操作',
@@ -296,7 +264,7 @@ const Cargo: FC = () => {
         render: (_:any, item:any) => (
           <div className="operate-wrap">
               <div>
-              {renderOperation(item.audit_status, item.status, item)}
+              {renderOperation(item.meetingStatus, item)}
               </div>
           </div>
         )
@@ -319,25 +287,30 @@ const Cargo: FC = () => {
       >
       <Row gutter={24}>
         <Col span={8}>
-          <Form.Item label="活动名称" name="name">
-            <Input placeholder="活动名称"/>
+          <Form.Item label="会议名称" name="meetingName">
+            <Input placeholder="请输入会有名称"/>
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item label="活动形式" name="title">
-            <Input placeholder="活动形式"/>
+          <Form.Item label="会议主办方" name="sponsor">
+            <Input placeholder="请输入会议主办方"/>
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item label="活动城市" name="phone">
-            <Input placeholder="活动城市"/>
+          <Form.Item label="会议地址" name="address">
+            <Input placeholder="请输入会议地址"/>
           </Form.Item>
         </Col>
       </Row>
       <Row gutter={24}>
         <Col span={8}>
+        <Form.Item label="会议ID" name="id">
+            <Input placeholder="请输入会议ID"/>
+          </Form.Item>
+        </Col>
+        <Col span={8}>
           <Form.Item label="活动状态" name="status" >
-              <Select placeholder="活动状态" allowClear defaultValue="">
+              <Select placeholder="请输入活动状态" allowClear defaultValue="">
                 {skuType.map((item:any) => (
                   <Option key={item.key} value={item.key}>{item.desc}</Option>
                 ))}
@@ -395,8 +368,8 @@ const Cargo: FC = () => {
 
       <Modal
           visible={showOnlineModal}
-          title="人员签到"
-          onOk={onlineSKU}
+          title="会议上线"
+          onOk={onlineMeeting}
           onCancel={() => toggleOnlineModal(-1)}
         >
         <div>
@@ -405,13 +378,24 @@ const Cargo: FC = () => {
       </Modal>
 
       <Modal
+          visible={showDeleteModal}
+          title="删除会议"
+          onOk={deleteMeeting}
+          onCancel={() => toggleDeleteModal(-1)}
+        >
+        <div>
+          确定要删除吗？
+        </div>
+      </Modal>
+
+      <Modal
           visible={showOfflineModal}
-          title="商品下架"
-          onOk={offlineSKU}
+          title="会议下线"
+          onOk={offlineMeeting}
           onCancel={() => toggleOfflineModal(-1)}
         >
         <div>
-          确定要下架该商品吗？
+          确定要下线该活动吗？
         </div>
       </Modal>
       </div>

@@ -31,6 +31,7 @@ export class NavBar extends React.Component<IState>{
   } 
 
   logout = () => {
+    sessionStorage.clear()
     router.push("/login")
   }
 

@@ -3,7 +3,19 @@ import qs from 'qs';
 import { notification, message } from 'antd';
 // import { API_VERSION } from '@/config';
 
-// axios基本配置
+export let authorization = {
+	'authorization': sessionStorage.getItem('authorization') || '',
+  };
+  
+   export function setMetaData () {
+	const meta = {
+	  'authorization': sessionStorage.getItem('authorization') || '',
+	}
+	authorization = meta
+  }
+
+
+  // axios基本配置
 const baseConfig = {
 	// withCredentials: true, // 允许跨域
 	timeout: 100000, // 超时设置
@@ -63,15 +75,12 @@ const errorHandler = (err: AxiosError): any =>
  */
 const request = async (option: AxiosRequestConfig): Promise<any> => {
 	const { data = {} } = await axios({ ...baseConfig, ...option }).catch(errorHandler);
-	const { errno, errmsg } = data;
+	const { returncode, message } = data;
 	// tag下载时候errno特殊处理
-	if (errno === 'generating' || errno === 'success') {
-		return data;
-	}
-	if (+errno !== 0) {
+	if (+returncode !== 0) {
 		notification.error({
 			duration: 8,
-			message: errmsg || '请求出错',
+			message: message || '请求出错',
 		});
 	}
 	return data;
@@ -86,6 +95,9 @@ const request = async (option: AxiosRequestConfig): Promise<any> => {
 const axiosGet = async (url: string, params?: object, options?: AxiosRequestConfig): Promise<any> =>
 	request({
 		url,
+		headers: {
+			...authorization
+		},
 		params: { ...params},
 		...options,
 	});
@@ -105,6 +117,7 @@ const axiosPost = async (url: string, data: object, options?: AxiosRequestConfig
 		headers: {
 			Accept: 'application/json',
 			'Content-Type': 'application/json',
+			...authorization
 		},
 		...options,
 	});
@@ -116,6 +129,30 @@ const axiosPost = async (url: string, data: object, options?: AxiosRequestConfig
  * @description: post数据为application/x-www-form-urlencoded，不建议用，不方便表示更为复杂的结构（有嵌套对象）
  */
 const axiosPostForm = async (
+	url: string,
+	data: object,
+	options?: AxiosRequestConfig,
+): Promise<any> =>
+	request({
+		url,
+		data: qs.stringify({ ...data }),
+		method: 'post',
+		headers: {
+			Accept: '*/*',
+			'Content-Type': 'application/x-www-form-urlencoded',
+			...authorization
+		},
+		...options,
+	});
+
+
+	/** post请求3
+ * @param  {string} url: 请求路径
+ * @param  {object} data ： 请求参数
+ * @param  {object} options : 自定义配置
+ * @description: post数据为application/x-www-form-urlencoded，不建议用，不方便表示更为复杂的结构（有嵌套对象）
+ */
+const axiosPostForm2 = async (
 	url: string,
 	data: object,
 	options?: AxiosRequestConfig,
@@ -173,4 +210,4 @@ const axiosAll = async (fetch: Promise<any>[]): Promise<any> => {
 };
 
 
-export { axiosGet, axiosPost, axiosPut, axiosDelete, axiosPostForm, axiosAll };
+export { axiosGet, axiosPost, axiosPut, axiosDelete, axiosPostForm, axiosAll, axiosPostForm2 };

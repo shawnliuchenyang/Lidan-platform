@@ -52,6 +52,15 @@ const config: IConfig =  {
       },
     }],
   ],
+
+proxy: {
+  '/api/meet': {
+      target: 'http://47.108.139.116/',
+      'pathRewrite': { '^/api/meet' : '' },
+      changeOrigin: true,
+      logLevel: 'debug',
+  },
+},
   theme: {
     "@primary-blue": "#1f77f3",
     "@white": "#fff",

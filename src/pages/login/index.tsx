@@ -2,7 +2,9 @@ import React, { Component } from 'react'
 import styles from './styles.less'
 import LoginInput from '../../components/LoginInput'
 import { Button, message, Modal, Input } from 'antd'
+import { login } from '@/service/login'
 import router from 'umi/router'
+import { setMetaData } from '@/utils/axios'
 
 type FormItem = {
   value: string
@@ -65,8 +67,19 @@ class LoginForm extends Component<IProps, IState> {
       return
     }
 
+    const params = {
+      accountId: username.value,
+      password: password.value,
+    }
+
     try {
-      router.push('/center');
+      const res = await login(params)
+      if(res.data){
+        sessionStorage.setItem('authorization', res.data.authorization)
+        setMetaData()
+        router.push('/center');
+      }
+      // router.push('/center');
     } catch(error) {
       message.error(error.message)
     }

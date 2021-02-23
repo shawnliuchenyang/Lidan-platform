@@ -3,17 +3,11 @@ import {TIME_STATUS} from '@/interface'
 
 export function getSkuStatus(status:number){
     let desc = ""
-    if(status === -1){
-        desc = "草稿"
+    if(status === 0){
+        desc = "已下线"
     }
     if(status === 1){
-        desc = "报名中"
-    }
-    if(status === 2){
-        desc = "活动中"
-    }
-    if(status === 3){
-        desc = "已结束"
+        desc = "已上线"
     }
     return desc
 }
@@ -39,16 +33,12 @@ export const cargoStatus = [
 
 export const skuType = [
     {
-        key: -1,
-        desc: "草稿"
+        key: 0,
+        desc: "已上线"
     },
     {
         key: 1,
-        desc: "报名中"
-    },
-    {
-        key: 2,
-        desc: "活动中"
+        desc: "已下限"
     },
 ]
 
