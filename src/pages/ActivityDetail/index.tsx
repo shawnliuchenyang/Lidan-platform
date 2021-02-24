@@ -54,6 +54,10 @@ const Cargo: FC<IProps> = (props) => {
 
   const submit = async() => {
     let data = form.getFieldsValue()
+    const values = await form.validateFields();
+    if(!values){
+      return
+    }
     data.beginTime =  moment(data.beginTime).format(dateFormat)
     data.endTime =  moment(data.endTime).format(dateFormat)
     const { location } = props
@@ -115,13 +119,13 @@ const Cargo: FC<IProps> = (props) => {
             />
         </Form.Item>
 
-        <Form.Item label="会议开始时间" name="beginTime">
+        <Form.Item label="会议开始时间" name="beginTime" rules={[{ required: true}]}>
           <DatePicker 
             showTime={{ format:'HH:mm:ss'}}
             />
         </Form.Item>
 
-        <Form.Item label="会议开始时间" name="endTime">
+        <Form.Item label="会议开始时间" name="endTime" rules={[{ required: true}]}>
           <DatePicker 
             showTime={{ format:'HH:mm:ss'}}
             />
@@ -140,10 +144,7 @@ const Cargo: FC<IProps> = (props) => {
         </Form>
 
         <div>
-        {/* <WangEditor 
-          changeEditor={changeEditor}
-          type="meet1"
-            /> */}
+
         </div>
           <div className={styles.btnGroup}>
              <Button onClick={back} className={styles.cancel}>返回</Button>

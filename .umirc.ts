@@ -22,6 +22,7 @@ const config: IConfig =  {
         { path: '/schedule', component: '../pages/Schedule', title: '日程安排' },
         { path: '/staff', component: '../pages/Staff', title: '人员管理' },
         { path: '/auth', component: '../pages/Auth', title: '权限管理' },
+        { path: '/auth/account', component: '../pages/Auth/AccountDetail', title: '权限管理' },
         { path: '/eassy', component: '../pages/Eassy', title: '征文管理' },
         { path: '/activity', component: '../pages/Activity', title: '活动管理' },
         { path: '/activity/detail', component: '../pages/ActivityDetail', title: '活动详情' },

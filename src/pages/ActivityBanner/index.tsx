@@ -92,6 +92,10 @@ const ActivityBanner: FC<IProps> = (props) => {
 
   const onFinish = async(data:any) => {
     const { query } = props.location
+    const values = await form.validateFields();
+    if(!values){
+      return
+    }
     try {
       const params = {
         banner: data.banner,
@@ -167,12 +171,12 @@ const ActivityBanner: FC<IProps> = (props) => {
                 >
                   <InputNumber placeholder="排序顺序,数字越小越靠前" />
                 </Form.Item>
-                <div onClick={() => remove(field.name)}><MinusCircleOutlined/>取消图片</div>
+                <a onClick={() => remove(field.name)}><MinusCircleOutlined/>&nbsp;取消图片</a>
                 <Divider />
               </Space>
             ))}
             <Form.Item>
-              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+              <Button style={{width: "200px"}} type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
                 新增轮播图图片
               </Button>
             </Form.Item>
@@ -181,8 +185,9 @@ const ActivityBanner: FC<IProps> = (props) => {
       }}
       </Form.List>
       <Form.Item>
+      <Button onClick={back} className={styles.cancel}>返回</Button>
         <Button type="primary" htmlType="submit">
-          Submit
+          保存
         </Button>
       </Form.Item>
     </Form>
@@ -192,10 +197,6 @@ const ActivityBanner: FC<IProps> = (props) => {
           type="meet1"
             /> */}
         </div>
-          <div className={styles.btnGroup}>
-             <Button onClick={back} className={styles.cancel}>返回</Button>
-             <Button onClick={submit} className={styles.submit} type="primary">保存</Button>
-          </div>
         </div>
         </Spin>
       </div>
