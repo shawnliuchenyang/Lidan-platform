@@ -56,6 +56,8 @@ const config: IConfig =  {
     }],
   ],
 
+  outputPath:'./',
+  
 proxy: {
   '/api/meet': {
       target: 'http://47.108.139.116/',

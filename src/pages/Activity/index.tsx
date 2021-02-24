@@ -17,7 +17,7 @@ const { Option } = Select
 const Cargo: FC = () => {
 
   const [form] = Form.useForm();
-  const [staffList, setStaffList] = useState([]);
+  const [meetingList, setmeetingList] = useState([]);
   const [loading, setloading] = useState(false);
   const [page, setpage] = useState(1);
   const [total, settotal] = useState(0);
@@ -50,7 +50,7 @@ const Cargo: FC = () => {
       if(res.data){
         console.log(res.data)
         const noDelList = res.data.list.filter(item => !item.isDel)
-        setStaffList(noDelList)
+        setmeetingList(noDelList)
         settotal(res.data.total)
         if(init){
           setpage(1)
@@ -366,7 +366,7 @@ const Cargo: FC = () => {
           <Spin spinning={loading}>
           <Table
               columns={renderColumns()}
-              dataSource={staffList}
+              dataSource={meetingList}
               pagination={{current:page, pageSize:20, total, onChange:(page: number) => setpage(page)}}
               rowKey='id'
         />
