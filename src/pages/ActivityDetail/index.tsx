@@ -90,7 +90,7 @@ const Cargo: FC<IProps> = (props) => {
       <div className={styles.container}>
         <Spin spinning={loading}>
         <div className={styles.header}>
-          <div className={styles.brumbs}>活动创建</div>
+          <div className={styles.brumbs}>会议创建</div>
         </div>
         <div className={styles.body}>
         <Form 
@@ -115,13 +115,13 @@ const Cargo: FC<IProps> = (props) => {
             />
         </Form.Item>
 
-        <Form.Item label="活动开始时间" name="beginTime">
+        <Form.Item label="会议开始时间" name="beginTime">
           <DatePicker 
             showTime={{ format:'HH:mm:ss'}}
             />
         </Form.Item>
 
-        <Form.Item label="活动开始时间" name="endTime">
+        <Form.Item label="会议开始时间" name="endTime">
           <DatePicker 
             showTime={{ format:'HH:mm:ss'}}
             />

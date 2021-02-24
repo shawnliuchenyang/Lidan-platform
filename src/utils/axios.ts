@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import qs from 'qs';
 import { notification, message } from 'antd';
+import router from 'umi/router';
 // import { API_VERSION } from '@/config';
 
 export let authorization = {
@@ -77,6 +78,10 @@ const request = async (option: AxiosRequestConfig): Promise<any> => {
 	const { data = {} } = await axios({ ...baseConfig, ...option }).catch(errorHandler);
 	const { returncode, message } = data;
 	// tag下载时候errno特殊处理
+	if (+returncode == 4000000){
+		sessionStorage.clear()
+		router.push("/login")
+	}
 	if (+returncode !== 0) {
 		notification.error({
 			duration: 8,

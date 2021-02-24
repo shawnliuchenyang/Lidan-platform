@@ -1,7 +1,7 @@
 import moment from 'moment';
 import {TIME_STATUS} from '@/interface'
 
-export function getSkuStatus(status:number){
+export function geMeetingStatus(status:number){
     let desc = ""
     if(status === 0){
         desc = "已下线"
@@ -31,14 +31,14 @@ export const cargoStatus = [
     },
 ]
 
-export const skuType = [
+export const meetingStatus = [
     {
         key: 0,
-        desc: "已上线"
+        desc: "已下线"
     },
     {
         key: 1,
-        desc: "已下限"
+        desc: "已上线"
     },
 ]
 

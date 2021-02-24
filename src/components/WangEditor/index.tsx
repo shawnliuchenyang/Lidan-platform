@@ -2,6 +2,8 @@ import React, {FC, useState, useEffect } from 'react';
 import E from 'wangeditor'
 import styles from './index.less'
 import { Select } from "antd";
+import { authorization } from '@/utils/axios'
+import { baseURL } from '@/config'
 const { Option } = Select
 
 const phoneMap = [
@@ -52,6 +54,7 @@ let editor = null
 type IProps = {
   value: any
   changeEditor: (view:any, type: string) => void
+  editorid: string
 }
 const Editor: FC<IProps> = (props) => {
 
@@ -59,27 +62,40 @@ const Editor: FC<IProps> = (props) => {
   const [viewWidth, setViewWidth] = useState(360)
   const [viewHeight, setViewHeight] = useState(640)
   const [phonetype, setPhonetype] = useState("Moto_G4")
+  const id = `#div_${props.editorid}`
 
   useEffect(() => {
     // 注：class写法需要在componentDidMount 创建编辑器
-    editor = new E("#div1")
-    editor.config.uploadImgServer = '/upload-img'
+    editor = new E(id)
+    editor.config.uploadImgServer = `${baseURL}/meeting-service/api/inner/img/fileUpload`
+    editor.config.uploadImgHeaders = {
+      ...authorization// 设置请求头
+      }
+    editor.config.uploadFileName = "files"
     editor.config.height = 600
 
     editor.config.onchange = (newHtml) => {
       setContent(newHtml)
-      props.changeEditor(newHtml, props.type)
+      props.changeEditor(newHtml, props.editorid)
       // props.onChange(newHtml)
     }
     
     /**一定要创建 */
     editor.create()
+    // editor.txt.html(props.value)
+
 
     return () => {
       // 组件销毁时销毁编辑器  注：class写法需要在componentWillUnmount中调用
       editor.destroy()
     }
   }, [])
+
+  useEffect(() => {
+    // 注：class写法需要在componentDidMount 创建编辑器
+   editor.txt.html(props.value)
+  }, [props.value])
+
 
   // 获取html方法1
   function getHtml() {
@@ -108,9 +124,7 @@ const Editor: FC<IProps> = (props) => {
   return (
     <div>
     <div className={styles.editorfield}>
-      <div className={styles.editorTitle}>{props.title?"props.title":"会议介绍"}:</div>
-
-      <div  className={styles.editorContent} id="div1" dangerouslySetInnerHTML={{__html: props.value}}></div>
+      <div  className={styles.editorContent} id={`div_${props.editorid}`} ></div>
       <div>
       <div className={styles.btn}>
       <div className={styles.chooseTitle}>手机类型：</div>

@@ -24,8 +24,10 @@ const config: IConfig =  {
         { path: '/auth', component: '../pages/Auth', title: '权限管理' },
         { path: '/eassy', component: '../pages/Eassy', title: '征文管理' },
         { path: '/activity', component: '../pages/Activity', title: '活动管理' },
-        { path: '/staff/detail', component: '../pages/StaffDetail', title: '人员详情' },
         { path: '/activity/detail', component: '../pages/ActivityDetail', title: '活动详情' },
+        { path: '/activity/banner', component: '../pages/ActivityBanner', title: '轮播图' },
+        { path: '/activity/module', component: '../pages/ActivityModule', title: '活动模块' },
+        { path: '/staff/detail', component: '../pages/StaffDetail', title: '人员详情' },
       ]
     }
   ],

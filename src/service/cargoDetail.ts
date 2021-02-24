@@ -1,4 +1,4 @@
-import { axiosPostForm, axiosGet } from '@/utils/axios';
+import { axiosPostForm, axiosGet, axiosPost } from '@/utils/axios';
 import { baseURL } from '../config'
 
 
@@ -23,6 +23,19 @@ export interface meetingDetailParams {
 }
 export async function getMeetingDetail(params: meetingDetailParams) {
 return axiosGet(`${baseURL}/meeting-service/api/inner/meeting/detail`, params);
+}
+
+// 存储轮播图
+export interface saveBannerParams {
+  meetingId: number
+}
+export async function saveBanner(params: saveBannerParams) {
+return axiosPost(`${baseURL}/meeting-service/api/inner/meeting/save/banner`, params);
+}
+
+// 存模块信息
+export async function saveModule(params: any) {
+return axiosPost(`${baseURL}/meeting-service/api/inner/meeting/save/expandinfo`, params);
 }
 
 

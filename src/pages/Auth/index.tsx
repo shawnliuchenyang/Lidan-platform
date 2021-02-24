@@ -4,7 +4,7 @@ import { Button, Table, Input, Select, Modal, message, Radio, Spin, DatePicker, 
 import router from 'umi/router';
 import { getSkuList, skuApply, skuApprove, skuStop } from '@/service/cargo'
 import { PRIORITY_INFO, SKU_STATUS_INFO } from '@/constants/basic'
-import { getSkuStatus, cargoStatus, realStatus, skuType } from '@/utils/common'
+import { geMeetingStatus, cargoStatus, realStatus, meetingStatus } from '@/utils/common'
 import Utils from '@/utils/common';
 
 const { RangePicker } = DatePicker;
@@ -226,7 +226,7 @@ const Cargo: FC = () => {
         render: (type: number) => {
           return(
             <div>
-              {skuType.find(item => item.key == type).desc}
+              {meetingStatus.find(item => item.key == type).desc}
             </div>
           )
       }
@@ -267,7 +267,7 @@ const Cargo: FC = () => {
         key: 'status',
         render: (status:number, item:any) => (
             <div>
-              {getSkuStatus(item.audit_status, status)}
+              {geMeetingStatus(item.audit_status, status)}
             </div>
         )
       },

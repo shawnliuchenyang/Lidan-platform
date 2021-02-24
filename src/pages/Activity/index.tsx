@@ -5,7 +5,7 @@ import router from 'umi/router';
 import { getActivityList } from '@/service/cargo'
 import { createBaseinfo } from '@/service/cargoDetail'
 import { PRIORITY_INFO, SKU_STATUS_INFO } from '@/constants/basic'
-import { getSkuStatus, cargoStatus, realStatus, skuType } from '@/utils/common'
+import { geMeetingStatus, cargoStatus, realStatus, meetingStatus } from '@/utils/common'
 import Utils from '@/utils/common';
 
 const { RangePicker } = DatePicker;
@@ -39,10 +39,11 @@ const Cargo: FC = () => {
 
   const getList = async(init?:boolean) => {
     const params = form.getFieldsValue()
-    delete params.dateRange
     setloading(true)
     try{
       const res = await getActivityList({
+        ...params,
+        meetingStatus:params.status,
         pageSize: 9999,
         pageIndex: 1
       })
@@ -73,6 +74,36 @@ const Cargo: FC = () => {
     }
     router.push({
       pathname: '/activity/detail',
+      query
+    });
+  }
+
+  const goBanner = (item:any, type: string) => {
+    const query = item.id?
+    {
+      id: item.id,
+      type,
+    }:
+    {
+      type,
+    }
+    router.push({
+      pathname: '/activity/banner',
+      query
+    });
+  }
+
+  const goModule = (item:any, type: string) => {
+    const query = item.id?
+    {
+      id: item.id,
+      type,
+    }:
+    {
+      type,
+    }
+    router.push({
+      pathname: '/activity/module',
       query
     });
   }
@@ -177,13 +208,19 @@ const Cargo: FC = () => {
               查看
             </a>
             <a  onClick={() => goDetail(item, "edit")}>
-              编辑
+              编辑基础信息
+            </a>
+            <a  onClick={() => goBanner(item, "edit")}>
+              编辑活动轮播图
+            </a>
+            <a  onClick={() => goBanner(item, "edit")}>
+              编辑活动模块
             </a>
             <a  onClick={() => toggleDeleteModal(item)}>
               删除
             </a>
             <a onClick={() => toggleOnlineModal(item)}>
-              活动上线
+              会议上线
             </a>
           </div>
         )
@@ -196,13 +233,19 @@ const Cargo: FC = () => {
             查看
           </a>
           <a  onClick={() => goDetail(item, "edit")}>
-            编辑
+          编辑基础信息
           </a>
+          <a  onClick={() => goBanner(item, "edit")}>
+              编辑活动轮播图
+            </a>
+            <a  onClick={() => goModule(item, "edit")}>
+              编辑活动模块
+            </a>
           <a  onClick={() => toggleDeleteModal(item)}>
             删除
           </a>
           <a onClick={() => toggleOfflineModal(item)}>
-            活动下线
+            会议下线
           </a>
         </div>
       )
@@ -213,7 +256,7 @@ const Cargo: FC = () => {
     const { type } = form.getFieldsValue()
     const columns = [
       {
-        title: '活动ID',
+        title: '会议ID',
         dataIndex: 'id',
         key: 'id',
       },
@@ -248,7 +291,7 @@ const Cargo: FC = () => {
         key: 'meetingStatus',
         render: (status:number, item:any) => (
           <div>
-            {getSkuStatus(status)}
+            {geMeetingStatus(status)}
           </div>
       )
       },
@@ -277,7 +320,7 @@ const Cargo: FC = () => {
     return (
       <div className={styles.container}>
         <div className={styles.header}>
-          <div className={styles.brumbs}>活动管理</div>
+          <div className={styles.brumbs}>会议管理</div>
         </div>
         <div className={styles.body}>
         <Form 
@@ -304,14 +347,9 @@ const Cargo: FC = () => {
       </Row>
       <Row gutter={24}>
         <Col span={8}>
-        <Form.Item label="会议ID" name="id">
-            <Input placeholder="请输入会议ID"/>
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item label="活动状态" name="status" >
-              <Select placeholder="请输入活动状态" allowClear defaultValue="">
-                {skuType.map((item:any) => (
+          <Form.Item label="会议状态" name="status" >
+              <Select placeholder="请输入会议状态" allowClear defaultValue="">
+                {meetingStatus.map((item:any) => (
                   <Option key={item.key} value={item.key}>{item.desc}</Option>
                 ))}
               </Select>
@@ -320,7 +358,7 @@ const Cargo: FC = () => {
       </Row>     
       </Form>
       <div className={styles.btnGroup}>
-        <Button type="primary" onClick={() => getActivityList(true)} className={styles.searchBtn}>查询</Button>
+        <Button type="primary" onClick={() => getList(true)} className={styles.searchBtn}>查询</Button>
         <Button type="primary" onClick={() => goDetail({}, "create")} className={styles.createNew}>创建</Button>
       </div>
 
@@ -395,7 +433,7 @@ const Cargo: FC = () => {
           onCancel={() => toggleOfflineModal(-1)}
         >
         <div>
-          确定要下线该活动吗？
+          确定要下线该会议吗？
         </div>
       </Modal>
       </div>
