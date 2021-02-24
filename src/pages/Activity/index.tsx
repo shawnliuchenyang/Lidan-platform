@@ -204,9 +204,9 @@ const Cargo: FC = () => {
     if(status === 0){
         return(
           <div>
-            <a  onClick={() => goDetail(item, "check")}>
+            {/* <a  onClick={() => goDetail(item, "check")}>
               查看
-            </a>
+            </a> */}
             <a  onClick={() => goDetail(item, "edit")}>
               编辑基础信息
             </a>
@@ -229,9 +229,9 @@ const Cargo: FC = () => {
     if(status === 1){
       return(
         <div>
-          <a  onClick={() => goDetail(item, "check")}>
+          {/* <a  onClick={() => goDetail(item, "check")}>
             查看
-          </a>
+          </a> */}
           <a  onClick={() => goDetail(item, "edit")}>
           编辑基础信息
           </a>
