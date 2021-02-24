@@ -57,11 +57,11 @@ export class NavBar extends React.Component<IState>{
             <span>活动管理</span>
           </span>
           </Menu.Item>
-          <Menu.Item key="/staff" icon={<AppstoreOutlined />}>
+          {/* <Menu.Item key="/staff" icon={<AppstoreOutlined />}>
           <span>
             <span>人员管理</span>
           </span>
-          </Menu.Item>
+          </Menu.Item> */}
           {/* <Menu.Item key="/essay"  icon={<SettingOutlined />}>
           <span>
             <span>征文管理</span>
