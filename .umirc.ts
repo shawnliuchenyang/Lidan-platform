@@ -56,7 +56,6 @@ const config: IConfig =  {
     }],
   ],
 
-  outputPath:'./',
   
 proxy: {
   '/api/meet': {
