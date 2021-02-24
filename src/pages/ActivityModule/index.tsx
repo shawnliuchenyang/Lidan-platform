@@ -149,7 +149,10 @@ const ActivityBanner: FC<IProps> = (props) => {
           }
           const res = await saveModule(params)
           if(res.returncode === 0){
-            message.success("编辑成功")
+            message.success(`成功编辑${res.data.successTotal}个模块` )
+            if(res.data.failTotal){
+              message.error(`失败${res.data.failTotal}个模块` )
+            }
             // back()
           }
       }catch(err){
