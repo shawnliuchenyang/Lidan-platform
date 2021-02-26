@@ -213,7 +213,7 @@ const Cargo: FC = () => {
             <a  onClick={() => goBanner(item, "edit")}>
               编辑活动轮播图
             </a>
-            <a  onClick={() => goBanner(item, "edit")}>
+            <a  onClick={() => goModule(item, "edit")}>
               编辑活动模块
             </a>
             <a  onClick={() => toggleDeleteModal(item)}>
