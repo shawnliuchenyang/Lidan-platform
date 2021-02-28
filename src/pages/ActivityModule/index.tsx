@@ -46,7 +46,7 @@ const ActivityBanner: FC<IProps> = (props) => {
           const { data : { expandInfo } } = data
           if(expandInfo.length){
             setmoduleInfo(expandInfo)
-            form.setFieldsValue({modules:expandInfo})
+            form.setFieldsValue({modelList:expandInfo})
           }
         }
         setloading(false)
@@ -58,13 +58,6 @@ const ActivityBanner: FC<IProps> = (props) => {
 
   const back = () => {
     router.goBack()
-  }
-
-  const changeValue = (e:any, id:number) => {
-    const newInfo = moduleInfo
-    const key = Number(id)
-    newInfo[key].modelData = e
-    setmoduleInfo(newInfo)
   }
 
   const handleChange = (e:any, name:number, key:string) => {
@@ -83,7 +76,7 @@ const ActivityBanner: FC<IProps> = (props) => {
     }
     try {
       const params = {
-        modelList: data,
+        modelList:data.modelList,
         meetingId: query.id
       }
       const res = await saveModule(params)
@@ -99,7 +92,6 @@ const ActivityBanner: FC<IProps> = (props) => {
     }
   };
   const formData = form.getFieldsValue()
-  console.log('formData', formData)
 
     return (
       <div className={styles.container}>
@@ -118,7 +110,7 @@ const ActivityBanner: FC<IProps> = (props) => {
         autoComplete="off" 
         form={form} 
         >
-      <Form.List name="modules">
+      <Form.List name="modelList">
         {(fields, { add, remove }) => {
           return(
           <>
@@ -157,6 +149,10 @@ const ActivityBanner: FC<IProps> = (props) => {
                     showRemoveIcon={true}
                     name={'files'}
                     imgUploaderTitle='点击上传图片'
+                    imgSizeInfo= {'支持png, gif格式的图片，大小须为50px*50px'}
+                    imgWidth={50}
+                    imgHeight={50}
+                    zoom={0.2}
                   />
                 </Form.Item>
                 <Form.Item
@@ -173,7 +169,7 @@ const ActivityBanner: FC<IProps> = (props) => {
                         <Option key={2} value={2}>{"链接"}</Option>
                   </Select>
                 </Form.Item>
-                {formData.modules&&formData.modules[field.fieldKey]&& formData.modules[field.fieldKey].dataType == 2?<Form.Item
+                {formData.modelList&&formData.modelList[field.fieldKey]&& formData.modelList[field.fieldKey].dataType == 2?<Form.Item
                   {...field}
                   label="直播链接"
                   name={[field.name, 'modelData']}
@@ -183,7 +179,7 @@ const ActivityBanner: FC<IProps> = (props) => {
                   <Input placeholder="请输入直播跳转链接" />
                 </Form.Item>:null}
 
-                {formData.modules&&formData.modules[field.fieldKey]&& formData.modules[field.fieldKey].dataType == 1?<Form.Item
+                {formData.modelList&&formData.modelList[field.fieldKey]&& formData.modelList[field.fieldKey].dataType == 1?<Form.Item
                   {...field}
                   label="页面富文本"
                   name={[field.name, 'modelData']}

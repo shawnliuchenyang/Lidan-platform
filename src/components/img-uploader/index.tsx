@@ -5,6 +5,7 @@
 import React from 'react';
 import { Upload, message } from 'antd';
 import { authorization } from '@/utils/axios'
+import { MinusCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import './index.less';
 
@@ -263,7 +264,8 @@ class ImgUploader extends React.Component {
             imgUploaderTitle,
             imgSizeInfo,
             imgFormatInfo,
-            readonly
+            readonly,
+            zoom
         } = this.props;
         let {
             showRemoveIcon
@@ -281,8 +283,8 @@ class ImgUploader extends React.Component {
         return (
             <div
                 style={{
-                    width: this.imgWidth / 2,
-                    height: this.imgHeight / 2
+                    width: this.imgWidth / (zoom?zoom:2),
+                    height: this.imgHeight /  (zoom?zoom:2)
                 }}
                 onMouseEnter={this.onMouseEnter}
                 onMouseLeave={this.onMouseLeave}
@@ -308,17 +310,12 @@ class ImgUploader extends React.Component {
                     </span>
                 </div>
                 {' '}
-                {/* {showRemoveIcon
+                {showRemoveIcon
                     && imageUrl
                     && (
-                        <Icon
-                            className="btn-delete"
-                            onClick={this.remove}
-                            title="删除"
-                            type="delete"
-                        />
+                        <DeleteOutlined className="btn-delete" onClick={this.remove} />
                     )
-                    } */}
+                    }
                 {' '}
                 <UploadDragger
                     {...this.getConfig()}

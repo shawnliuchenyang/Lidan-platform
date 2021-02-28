@@ -56,40 +56,6 @@ const ActivityBanner: FC<IProps> = (props) => {
     router.goBack()
   }
 
-  const submit = async() => {
-    let data = form.getFieldsValue()
-    data.beginTime =  moment(data.beginTime).format(dateFormat)
-    data.endTime =  moment(data.endTime).format(dateFormat)
-    const { location } = props
-
-      try {
-        if(mode === "edit"){
-          const { query } = props.location
-          data.id = query.id
-          const res = await createBaseinfo(data)
-          if(res.returncode === 0){
-            message.success("编辑成功")
-            // back()
-          }
-        }
-        else{
-        const res = await createBaseinfo(data)
-        if(res.returncode === 0){
-          message.success("创建成功")
-          // back()
-        }
-      }
-      }catch(err){
-        message.error(err)
-      }
-  }
-
-  const onChange = (e:any, type:string) => {
-    if(type == "meet1"){
-      setMeetInfo(e)
-    }
-  }
-
   const onFinish = async(data:any) => {
     const { query } = props.location
     const values = await form.validateFields();
@@ -110,13 +76,7 @@ const ActivityBanner: FC<IProps> = (props) => {
     }
 
   };
-  const users = [
-		{
-			"imgUrl": "https://lidan-img.oss-cn-chengdu.aliyuncs.com/fff (1).png?versionId=CAEQPhiBgMDxt467vhciIGIzNGU3ZWU4NmNmYzQ4NjBhZjNjMGVmMDUxM2YxMWRj",
-			"jumpUrl": "123",
-			"sort": 12
-		}
-  ];
+
     return (
       <div className={styles.container}>
         <Spin spinning={loading}>
@@ -144,8 +104,6 @@ const ActivityBanner: FC<IProps> = (props) => {
                   rules={[{ required: true }]}
                 >
                   <ImgUploader 
-                    title='分享海报底图'
-                    tips='如需更换，请联系设计师提供图片'
                     action={`${baseURL}/meeting-service/api/inner/img/fileUpload`}
                     filePath='download_url'
                     imgFormat={['png', 'jpg']}
