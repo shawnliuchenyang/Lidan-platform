@@ -84,7 +84,7 @@ const ActivityBanner: FC<IProps> = (props) => {
       }
   }
 
-  const changeEditor = (e:any, type:string) => {
+  const onChange = (e:any, type:string) => {
     if(type == "meet1"){
       setMeetInfo(e)
     }
@@ -132,7 +132,6 @@ const ActivityBanner: FC<IProps> = (props) => {
         >
       <Form.List name="banner">
         {(fields, { add, remove }) => {
-          console.log('fields', fields)
           return(
           <>
             {fields.map(field => (
@@ -142,7 +141,7 @@ const ActivityBanner: FC<IProps> = (props) => {
                   label="轮播图图片"
                   name={[field.name, 'imgUrl']}
                   fieldKey={[field.fieldKey, 'imgUrl']}
-                  rules={[{ required: true, message: '请选择图片' }]}
+                  rules={[{ required: true }]}
                 >
                   <ImgUploader 
                     title='分享海报底图'
@@ -168,6 +167,7 @@ const ActivityBanner: FC<IProps> = (props) => {
                   label="图片排序顺序"
                   name={[field.name, 'sort']}
                   fieldKey={[field.fieldKey, 'sort']}
+                  rules={[{ required: true }]}
                 >
                   <InputNumber placeholder="排序顺序,数字越小越靠前" />
                 </Form.Item>
@@ -193,7 +193,7 @@ const ActivityBanner: FC<IProps> = (props) => {
     </Form>
         <div>
         {/* <WangEditor 
-          changeEditor={changeEditor}
+          onChange={onChange}
           type="meet1"
             /> */}
         </div>

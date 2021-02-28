@@ -53,7 +53,7 @@ let editor = null
 
 type IProps = {
   value: any
-  changeEditor: (view:any, type: string) => void
+  onChange: (view:any, type: string) => void
   editorid: string
 }
 const Editor: FC<IProps> = (props) => {
@@ -76,7 +76,7 @@ const Editor: FC<IProps> = (props) => {
 
     editor.config.onchange = (newHtml) => {
       setContent(newHtml)
-      props.changeEditor(newHtml, props.editorid)
+      props.onChange(newHtml, props.editorid)
       // props.onChange(newHtml)
     }
     

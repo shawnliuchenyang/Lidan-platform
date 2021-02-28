@@ -84,7 +84,7 @@ const Cargo: FC<IProps> = (props) => {
       }
   }
 
-  const changeEditor = (e:any, type:string) => {
+  const onChange = (e:any, type:string) => {
     if(type == "meet1"){
       setMeetInfo(e)
     }
@@ -130,16 +130,11 @@ const Cargo: FC<IProps> = (props) => {
             showTime={{ format:'HH:mm:ss'}}
             />
         </Form.Item>
-
-        {/* {hasSKUitems(type, "third_sku_id")?
-          <Form.Item label="中台卡批次ID" name="third_sku_id" rules={[{ required: true}]}>
-            <Input 
-              disabled={edit || check}
-              placeholder="请输入ID"
-              onBlur={() => judgeCardInfo(false)}
+        <Form.Item label="页面展示列数" name="layoutColumns" rules={[{ required: true}]}>
+          <InputNumber
+            min={1}
             />
-          </Form.Item>
-        : null} */}
+        </Form.Item>
 
         </Form>
 
