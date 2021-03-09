@@ -12,7 +12,7 @@ function log() {
 function make_compile() {
     log 'step1.安装依赖包'
     local start_time=`date +%s`
-    npm run i --no-optional
+    npm i 
     ret=$?
     if [ $ret -ne 0 ];then
         log "npm install failure"
@@ -50,40 +50,10 @@ function make_output() {
     log 'step3.创建输出包'
     local start_time=`date +%s`
     # 创建临时目录
-    local tmp_output="/tmp/output.${pid}"
-    local output="output"
+    local tmp_output="/data/wwwroot/mcpopeye.com/platform"
+    cp -rf ./dist/* ${tmp_output}/ &&
 
-    if [ -d $tmp_output ];then
-        rm -rf $tmp_output
-        ret=$?
-        if [ $? -ne 0 ];then
-            log "Remove $tmp_output failure"
-            exit $ret
-        fi
-    fi
 
-    mkdir -p $tmp_output
-
-    if [ -d $output ];then
-        mv $output .${output}.old   #  备份workspace下老的output目录
-    fi
-
-    # 填充output目录, output的内容即为待部署内容
-    (
-        # 拷贝 必要的文件至临时output目录, 此处拷贝dist目录下所有文件
-        cp -rf ./dist/* ${tmp_output}/ &&
-
-        # 将临时output目录 移动到workspace, 此即为需要部署包内容
-        mv ${tmp_output} $output &&
-
-        log "Generate output ok"
-
-    ) || {
-
-        # 填充output目录失败后, 退出码为 非0
-        log "Generate output failure"; exit 2;
-    }
-    local end_time=`date +%s`
     log "创建输出包耗时 `expr $end_time - $start_time` s."
 }
 

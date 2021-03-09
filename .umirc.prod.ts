@@ -2,7 +2,7 @@ import { IConfig } from 'umi-types';
 // ref: https://umijs.org/config/
 const config: IConfig =  {
   define: {
-		"process.env.ENV": "dev"
+		"process.env.ENV": "prod"
 	  },	
   treeShaking: true,
   history: 'hash',
